@@ -32,8 +32,7 @@ function LoginForm() {
             if (result?.error) {
                 setError(result.error);
             } else {
-                router.push(callbackUrl);
-                router.refresh();
+                window.location.href = callbackUrl;
             }
         } catch {
             setError('Something went wrong. Please try again.');
