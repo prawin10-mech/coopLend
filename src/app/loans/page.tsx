@@ -4,14 +4,16 @@ import { useEffect, useState } from "react"
 import { DataTable } from "@/components/DataTable"
 import { getColumns } from "@/components/columns"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, Upload } from "lucide-react"
 import { LoanFormModal } from "@/components/LoanFormModal"
+import { ImportModal } from "@/components/ImportModal"
 
 export default function LoansPage() {
     const [data, setData] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [editingLoan, setEditingLoan] = useState<any>(null)
+    const [isImportOpen, setIsImportOpen] = useState(false)
 
     const fetchLoans = async () => {
         try {
@@ -83,9 +85,18 @@ export default function LoansPage() {
                     <h2 className="text-3xl font-bold tracking-tight text-primary">Loan Records</h2>
                     <p className="text-muted-foreground mt-1 text-sm">Manage society members and their active loan timelines.</p>
                 </div>
-                <Button onClick={handleCreateNew} className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4">
-                    <Plus className="mr-2 h-4 w-4" /> Create New Loan
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsImportOpen(true)}
+                        className="font-medium px-4 border-primary/40 text-primary hover:bg-primary/10"
+                    >
+                        <Upload className="mr-2 h-4 w-4" /> Import from File
+                    </Button>
+                    <Button onClick={handleCreateNew} className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4">
+                        <Plus className="mr-2 h-4 w-4" /> Create New Loan
+                    </Button>
+                </div>
             </div>
 
             {loading ? (
@@ -99,6 +110,12 @@ export default function LoansPage() {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleModalSubmit}
                 initialData={editingLoan}
+            />
+
+            <ImportModal
+                open={isImportOpen}
+                onClose={() => setIsImportOpen(false)}
+                onSuccess={fetchLoans}
             />
         </div>
     )

@@ -69,7 +69,7 @@ const COL_WIDTHS: Record<string, string> = {
     ioaRoi: "w-20 min-w-[80px]",
     totalPrincipalAmount: "w-32 min-w-[128px]",
     outstandingAmount: "w-32 min-w-[128px]",
-    actions: "w-24 min-w-[96px] sticky right-0 bg-card",
+    actions: "w-24 min-w-[96px] sticky right-0 z-20 bg-background/80 backdrop-blur-md shadow-[-4px_0_8px_rgba(0,0,0,0.05)] border-l",
 }
 
 function filtersFromParams(params: URLSearchParams): ColumnFiltersState {

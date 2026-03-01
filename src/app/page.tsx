@@ -2,6 +2,7 @@ import connectToDatabase from '@/lib/mongodb';
 import Loan from '@/models/Loan';
 import DashboardCharts from '@/components/DashboardCharts';
 import DueThisMonth from '@/components/DueThisMonth';
+import GlSearch from '@/components/GlSearch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Landmark, AlertCircle, Users, TrendingUp } from 'lucide-react';
 
@@ -21,9 +22,14 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-primary">CoopLend Dashboard</h2>
-        <p className="text-muted-foreground mt-1">Real-time loan performance and village analytics.</p>
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight text-primary">CoopLend Dashboard</h2>
+          <p className="text-muted-foreground mt-1">Real-time loan performance and village analytics.</p>
+        </div>
+        <div className="w-full md:w-80 shrink-0">
+          <GlSearch />
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

@@ -128,7 +128,7 @@ export function LoanFormModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#f8faf9] border-none shadow-xl">
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card/80 backdrop-blur-xl border-none shadow-xl">
                 <DialogHeader>
                     <DialogTitle className="text-xl text-primary font-bold">
                         {initialData ? "Edit Loan Entry" : "New Loan Entry"}
@@ -145,14 +145,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="admissionNumber" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Admission Number</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="loanNumber" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Loan Number</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -161,14 +161,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="glNo" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">GL Number</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="societyLoanNo" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Society Loan No.</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -177,14 +177,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="ledgerFolioNumber" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Ledger Folio No.</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="memberName" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Member Name</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -193,14 +193,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="fatherSpouseName" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Father/Spouse Name</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="contactNumber" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Contact Number</FormLabel>
-                                    <FormControl><Input placeholder="10 digits" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input placeholder="10 digits" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -211,7 +211,7 @@ export function LoanFormModal({
                                     <FormLabel className="text-foreground font-semibold">Gender</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="bg-white border-primary/20 focus-visible:ring-primary/30">
+                                            <SelectTrigger className="bg-background border-primary/20 focus-visible:ring-primary/30">
                                                 <SelectValue placeholder="Select gender" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -227,7 +227,7 @@ export function LoanFormModal({
                             <FormField control={form.control} name="age" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Age</FormLabel>
-                                    <FormControl><Input type="number" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="number" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -236,14 +236,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="casteCategory" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Caste/Category</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="village" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Village</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -252,14 +252,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="scheme" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Scheme</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="aadhaarCardNo" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Aadhaar Number</FormLabel>
-                                    <FormControl><Input placeholder="12 digits" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input placeholder="12 digits" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -268,14 +268,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="purposeDescription" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Purpose</FormLabel>
-                                    <FormControl><Input className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="disbursalDate" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Disbursal Date</FormLabel>
-                                    <FormControl><Input type="date" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="date" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -284,14 +284,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="roi" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">ROI (%)</FormLabel>
-                                    <FormControl><Input type="number" step="0.01" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="number" step="0.01" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="penalRoi" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Penal ROI (%)</FormLabel>
-                                    <FormControl><Input type="number" step="0.01" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="number" step="0.01" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -300,14 +300,14 @@ export function LoanFormModal({
                             <FormField control={form.control} name="ioaRoi" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">IOA ROI (%)</FormLabel>
-                                    <FormControl><Input type="number" step="0.01" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="number" step="0.01" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="dueDate" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Due Date</FormLabel>
-                                    <FormControl><Input type="date" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="date" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -316,7 +316,7 @@ export function LoanFormModal({
                             <FormField control={form.control} name="totalPrincipalAmount" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-foreground font-semibold">Total Principal Amount (₹)</FormLabel>
-                                    <FormControl><Input type="number" className="bg-white border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
+                                    <FormControl><Input type="number" className="bg-background border-primary/20 focus-visible:ring-primary/30" {...field} /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />

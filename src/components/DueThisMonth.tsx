@@ -81,8 +81,8 @@ export default function DueThisMonth() {
                     <div className="flex-1 bg-black/40" onClick={() => setOpen(false)} />
 
                     {/* Panel */}
-                    <div className="w-full max-w-2xl bg-background border-l shadow-2xl flex flex-col h-full overflow-hidden">
-                        <div className="flex items-center justify-between px-6 py-4 border-b bg-muted/30">
+                    <div className="w-full max-w-2xl bg-background/80 backdrop-blur-xl border-l shadow-2xl flex flex-col h-full overflow-hidden">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 bg-muted/20">
                             <div>
                                 <h2 className="text-lg font-bold flex items-center gap-2">
                                     <CalendarClock className="h-5 w-5 text-orange-500" />
