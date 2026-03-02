@@ -1,0 +1,11 @@
+# Ignore local data files and scripts from Vercel deployments to prevent output size errors
+*.xlsx
+*.xls
+data.xlsx
+repayments.xls
+import.js
+merge_repayments.js
+build_output.txt
+
+# Log files
+*.log
