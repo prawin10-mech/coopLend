@@ -28,6 +28,8 @@ const LoanSchema = new mongoose.Schema({
     roi: { type: Number },
     penalRoi: { type: Number },
     ioaRoi: { type: Number },
+    annualDemands: { type: mongoose.Schema.Types.Mixed, default: {} },
+    isClosed: { type: Boolean, default: false },
     repaymentHistory: [RepaymentSchema]
 }, {
     timestamps: true,

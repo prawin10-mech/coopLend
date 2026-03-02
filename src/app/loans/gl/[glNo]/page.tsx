@@ -5,11 +5,32 @@ import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
-import { ArrowLeft, Layers, IndianRupee, CreditCard, TrendingDown, User, Phone, MapPin, Calendar } from "lucide-react"
+import {
+    ArrowLeft, Layers, IndianRupee, CreditCard, TrendingDown,
+    User, Phone, MapPin, Calendar, FileBarChart2, ChevronDown, ChevronUp
+} from "lucide-react"
 import Link from "next/link"
 
 const fmt = (n: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n)
 const fmtDate = (d: string) => { try { return format(new Date(d), "dd-MMM-yyyy") } catch { return "—" } }
+
+const YEARS = [2025, 2026, 2027, 2028, 2029]
+
+const yearColor = (year: number) => {
+    const now = new Date().getFullYear()
+    if (year < now) return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-400"
+    if (year === now) return "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400"
+    return "bg-slate-50 text-slate-600 border-slate-200 dark:bg-slate-900/50 dark:text-slate-400"
+}
+
+const yearBadge = (year: number) => {
+    const now = new Date().getFullYear()
+    if (year < now) return "bg-red-100 text-red-700 border-red-200"
+    if (year === now) return "bg-amber-100 text-amber-700 border-amber-200"
+    return "bg-blue-50 text-blue-600 border-blue-200"
+}
+
+interface DemandRow { loanNo: string; memberName: string; demands: Record<number, { year: number; dueDate: string; grandTotal: number; phone: string }> }
 
 export default function GLGroupPage() {
     const params = useParams()
@@ -18,6 +39,7 @@ export default function GLGroupPage() {
 
     const [data, setData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
+    const [showDemands, setShowDemands] = useState(true)
 
     useEffect(() => {
         if (!glNo) return
@@ -34,14 +56,14 @@ export default function GLGroupPage() {
     if (!data) return null
 
     const { loans, summary } = data
-    const member = loans[0] // All loans under same GL belong to same member
+    const member = loans[0]
 
     return (
         <div className="flex flex-col space-y-6">
             {/* Header */}
             <div className="flex items-center gap-4 flex-wrap">
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href="/loans"><ArrowLeft className="h-5 w-5" /></Link>
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                    <ArrowLeft className="h-5 w-5" />
                 </Button>
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap">
@@ -112,6 +134,106 @@ export default function GLGroupPage() {
                 ))}
             </div>
 
+            {/* ── Repayment Demand Schedule ── */}
+            <div>
+                <button
+                    onClick={() => setShowDemands(v => !v)}
+                    className="w-full flex items-center justify-between mb-4 group"
+                >
+                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                        <FileBarChart2 className="h-5 w-5 text-amber-500" />
+                        Repayment Demand Schedule
+                        {loans.filter((l: any) => l.annualDemands && Object.keys(l.annualDemands).length > 0).length > 0 && (
+                            <span className="text-xs font-normal bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">
+                                {loans.filter((l: any) => l.annualDemands && Object.keys(l.annualDemands).length > 0).length} loan{loans.filter((l: any) => l.annualDemands && Object.keys(l.annualDemands).length > 0).length > 1 ? "s" : ""}
+                            </span>
+                        )}
+                    </h3>
+                    {showDemands
+                        ? <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                        : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                </button>
+
+                {showDemands && (
+                    loans.filter((l: any) => l.annualDemands && Object.keys(l.annualDemands).length > 0).length === 0 ? (
+                        <Card className="border-dashed">
+                            <CardContent className="py-8 text-center text-sm text-muted-foreground">
+                                No repayment demand data found for GL #{glNo}.<br />
+                                <span className="text-xs">Use "Import Repayments" on the loans page to load data.</span>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="space-y-5">
+                            {loans.filter((l: any) => l.annualDemands && Object.keys(l.annualDemands).length > 0).map((loan: any) => (
+                                <Card key={loan._id} className="border shadow-sm overflow-hidden">
+                                    <CardHeader className="pb-3 border-b bg-muted/10 flex flex-row items-center justify-between">
+                                        <div>
+                                            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                                                <CreditCard className="h-4 w-4 text-primary" />
+                                                Society Loan No:
+                                                <Link href={`/loans/${loan._id}`} className="font-mono text-primary hover:underline underline-offset-2">
+                                                    {loan.societyLoanNo}
+                                                </Link>
+                                            </CardTitle>
+                                            {loan.contactNumber && (
+                                                <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                                                    <Phone className="h-3 w-3" /> {loan.contactNumber}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xs text-muted-foreground font-medium">Demand Due</p>
+                                            <p className="font-bold text-base text-primary">
+                                                {fmt(loan.annualDemands[2025]?.grandTotal || loan.annualDemands[Object.keys(loan.annualDemands)[0]]?.grandTotal || 0)}
+                                            </p>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="pt-4 pb-3">
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm">
+                                                <thead>
+                                                    <tr className="border-b">
+                                                        <th className="text-left text-xs font-semibold text-muted-foreground pb-2 pr-4">Year</th>
+                                                        <th className="text-left text-xs font-semibold text-muted-foreground pb-2 pr-4">Due Date</th>
+                                                        <th className="text-right text-xs font-semibold text-muted-foreground pb-2">Demand Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {YEARS.map(yr => {
+                                                        const row = loan.annualDemands[yr]
+                                                        if (!row) return null
+                                                        const now = new Date().getFullYear()
+                                                        const isPast = yr < now
+                                                        const isCurrent = yr === now
+                                                        return (
+                                                            <tr key={yr} className={`border-b last:border-0 ${isPast ? "bg-red-50/40 dark:bg-red-950/10" : isCurrent ? "bg-amber-50/40 dark:bg-amber-950/10" : ""}`}>
+                                                                <td className="py-2 pr-4">
+                                                                    <span className={`inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded border ${yearBadge(yr)}`}>
+                                                                        {yr}
+                                                                        {isPast && <span className="ml-1 opacity-70">↑ Past</span>}
+                                                                        {isCurrent && <span className="ml-1 opacity-70">← Now</span>}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="py-2 pr-4 text-xs text-muted-foreground flex items-center gap-1">
+                                                                    <Calendar className="h-3 w-3 shrink-0" /> {row.dueDate || "—"}
+                                                                </td>
+                                                                <td className="py-2 text-right font-bold text-sm">
+                                                                    {fmt(row.grandTotal)}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    )
+                )}
+            </div>
+
             {/* Individual Loan Cards */}
             <div>
                 <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
@@ -133,6 +255,7 @@ export default function GLGroupPage() {
                                     {[
                                         ["Scheme", loan.scheme],
                                         ["Loan Number", loan.loanNumber],
+                                        ["Society Loan No", loan.societyLoanNo],
                                         ["Ledger Folio", loan.ledgerFolioNumber],
                                         ["Purpose", loan.purposeDescription],
                                         ["ROI", loan.roi ? `${loan.roi}%` : null],

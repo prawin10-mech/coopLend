@@ -4,9 +4,10 @@ import { useEffect, useState } from "react"
 import { DataTable } from "@/components/DataTable"
 import { getColumns } from "@/components/columns"
 import { Button } from "@/components/ui/button"
-import { Plus, Upload } from "lucide-react"
+import { Plus, Upload, FileBarChart2 } from "lucide-react"
 import { LoanFormModal } from "@/components/LoanFormModal"
 import { ImportModal } from "@/components/ImportModal"
+import { RepaymentImportModal } from "@/components/RepaymentImportModal"
 
 export default function LoansPage() {
     const [data, setData] = useState<any[]>([])
@@ -14,6 +15,7 @@ export default function LoansPage() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [editingLoan, setEditingLoan] = useState<any>(null)
     const [isImportOpen, setIsImportOpen] = useState(false)
+    const [isRepaymentImportOpen, setIsRepaymentImportOpen] = useState(false)
 
     const fetchLoans = async () => {
         try {
@@ -85,13 +87,20 @@ export default function LoansPage() {
                     <h2 className="text-3xl font-bold tracking-tight text-primary">Loan Records</h2>
                     <p className="text-muted-foreground mt-1 text-sm">Manage society members and their active loan timelines.</p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                    <Button
+                        variant="outline"
+                        onClick={() => setIsRepaymentImportOpen(true)}
+                        className="font-medium px-4 border-amber-400/60 text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                    >
+                        <FileBarChart2 className="mr-2 h-4 w-4" /> Import Repayments
+                    </Button>
                     <Button
                         variant="outline"
                         onClick={() => setIsImportOpen(true)}
                         className="font-medium px-4 border-primary/40 text-primary hover:bg-primary/10"
                     >
-                        <Upload className="mr-2 h-4 w-4" /> Import from File
+                        <Upload className="mr-2 h-4 w-4" /> Import Loans
                     </Button>
                     <Button onClick={handleCreateNew} className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4">
                         <Plus className="mr-2 h-4 w-4" /> Create New Loan
@@ -116,6 +125,11 @@ export default function LoansPage() {
                 open={isImportOpen}
                 onClose={() => setIsImportOpen(false)}
                 onSuccess={fetchLoans}
+            />
+
+            <RepaymentImportModal
+                open={isRepaymentImportOpen}
+                onClose={() => setIsRepaymentImportOpen(false)}
             />
         </div>
     )

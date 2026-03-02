@@ -136,13 +136,18 @@ async function importData() {
 
                 if (!principal && principal !== 0) return; // skip rows without any amount
 
+                const rawSocietyLoan = cleanRow['societyloanno.'] || cleanRow['societyloanno'];
+                const societyLoanNo = typeof rawSocietyLoan === 'string'
+                    ? rawSocietyLoan.replace(/[\s\-]+/g, '').toUpperCase()
+                    : rawSocietyLoan;
+
                 dataToImport.push({
                     admissionNumber: cleanRow['admissionnumber'] || cleanRow['admissionno'] || cleanRow['admissionno.'],
                     loanNumber: loanNumber,
                     memberName: memberName,
                     fatherSpouseName: cleanRow['father/spousename'] || cleanRow['fathername'] || cleanRow['husbandname'],
                     glNo: glraw,
-                    societyLoanNo: cleanRow['societyloanno.'] || cleanRow['societyloanno'],
+                    societyLoanNo: societyLoanNo,
                     ledgerFolioNumber: cleanRow['ledgerfolionumber'] || cleanRow['ledgerfoliono.'],
                     contactNumber: cleanRow['contactnumber'] || cleanRow['phonenumber'] || cleanRow['mobile'],
                     gender: cleanRow['gender'],
@@ -167,14 +172,17 @@ async function importData() {
         }
 
         if (dataToImport.length > 0) {
-            console.log(`Ready to import ${dataToImport.length} records. Cleaning old data...`);
-            await Loan.deleteMany({});
+            console.log(`Ready to import ${dataToImport.length} records. Dropping old collection entirely...`);
 
             try {
-                await Loan.collection.dropIndex("loanNumber_1");
-                console.log("Dropped loanNumber unique index.");
+                await mongoose.connection.db.dropCollection('loans');
+                console.log("Successfully dropped the entire 'loans' collection.");
             } catch (error) {
-                // Ignore if index doesn't exist
+                if (error.code === 26) {
+                    console.log("Collection doesn't exist yet, proceeding to create...");
+                } else {
+                    console.log("Error dropping collection (might not exist):", error.message);
+                }
             }
 
             console.log('Inserting new data...');

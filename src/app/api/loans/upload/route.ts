@@ -120,13 +120,18 @@ export async function POST(req: Request) {
                 return;
             }
 
+            const rawSocietyLoan = cleanRow['societyloanno.'] || cleanRow['societyloanno'];
+            const societyLoanNo = typeof rawSocietyLoan === 'string'
+                ? rawSocietyLoan.replace(/[\s\-]+/g, '').toUpperCase()
+                : rawSocietyLoan;
+
             toInsert.push({
                 admissionNumber: cleanRow['admissionnumber'] || cleanRow['admissionno'] || cleanRow['admissionno.'],
                 loanNumber,
                 memberName,
                 fatherSpouseName: cleanRow['father/spousename'] || cleanRow['fathername'] || cleanRow['husbandname'],
                 glNo: glraw,
-                societyLoanNo: cleanRow['societyloanno.'] || cleanRow['societyloanno'],
+                societyLoanNo,
                 ledgerFolioNumber: cleanRow['ledgerfolionumber'] || cleanRow['ledgerfoliono.'],
                 contactNumber: cleanRow['contactnumber'] || cleanRow['phonenumber'] || cleanRow['mobile'],
                 gender: cleanRow['gender'],
