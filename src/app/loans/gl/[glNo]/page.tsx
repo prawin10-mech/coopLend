@@ -182,9 +182,9 @@ export default function GLGroupPage() {
                                             )}
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-xs text-muted-foreground font-medium">Demand Due</p>
+                                            <p className="text-xs text-muted-foreground font-medium">Total Due</p>
                                             <p className="font-bold text-base text-primary">
-                                                {fmt(loan.annualDemands[2025]?.grandTotal || loan.annualDemands[Object.keys(loan.annualDemands)[0]]?.grandTotal || 0)}
+                                                {fmt(Math.max(0, (loan.totalPrincipalAmount || 0) - (loan.repaymentHistory?.reduce((sum: number, p: any) => sum + (p.amountPaid || 0), 0) || 0)))}
                                             </p>
                                         </div>
                                     </CardHeader>
