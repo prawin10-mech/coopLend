@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileText, Landmark, Menu, X } from "lucide-react"
+import { LayoutDashboard, FileText, Landmark, Menu, X, Archive } from "lucide-react"
 import { ThemeToggle } from "@/components/ThemeToggle"
 
 const NAV_LINKS = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/loans", label: "Loan Records", icon: FileText },
+    { href: "/closed-loans", label: "Closed Loans", icon: Archive },
 ]
 
 export function MobileNav() {
@@ -72,8 +73,8 @@ export function MobileNav() {
                             key={href}
                             href={href}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors font-medium text-sm ${pathname === href
-                                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80"
+                                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                                : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80"
                                 }`}
                         >
                             <Icon className="w-5 h-5 shrink-0" />

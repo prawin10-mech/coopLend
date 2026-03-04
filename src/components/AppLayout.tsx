@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { LayoutDashboard, FileText, Landmark, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Landmark, LogOut, Archive } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MobileNav } from '@/components/MobileNav';
 
@@ -65,6 +65,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     <div className="px-2 pb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">General</div>
                     <NavLink href="/" icon={LayoutDashboard} label="Dashboard" />
                     <NavLink href="/loans" icon={FileText} label="Loan Records" />
+                    <NavLink href="/closed-loans" icon={Archive} label="Closed Loans" />
                 </div>
 
                 {/* Profile */}

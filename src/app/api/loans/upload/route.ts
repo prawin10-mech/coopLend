@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
             // Resolve raw values using all known aliases (mirrors import.js logic)
             const lnraw = cleanRow['loannumber'] || cleanRow['loanno'] || cleanRow['accountno'];
-            const mnraw = cleanRow['membername'] || cleanRow['name'] || cleanRow['borrowername'];
+            const mnraw = cleanRow['membername'] || cleanRow['name'] || cleanRow['borrowername'] || cleanRow['nameofthemember'];
             const glraw = cleanRow['glno.'] || cleanRow['glno'] || cleanRow['gl.no'] || cleanRow['gl.no.'];
 
             // Skip header/title rows that got picked up as data
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
             if (
                 ['loannumber', 'loanno', 'accountno'].includes(lnstripped) ||
-                ['membername', 'name', 'borrowername'].includes(mnstripped) ||
+                ['membername', 'name', 'borrowername', 'nameofthemember'].includes(mnstripped) ||
                 glstripped === 'glno'
             ) {
                 skipped++;

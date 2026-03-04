@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Loan from '@/models/Loan';
+import ClosedLoan from '@/models/ClosedLoan';
 import * as XLSX from 'xlsx';
 
 function parseCurrency(val: any) {
@@ -37,8 +38,12 @@ export async function POST(request: Request) {
             if (!l.annualDemands) l.annualDemands = {};
         });
 
+        // Clear existing closed loans before new import
+        await ClosedLoan.deleteMany({});
+
         let matched = 0;
         let notFound = 0;
+        const closedLoansMap = new Map();
 
         for (const sheetName of workbook.SheetNames) {
             if (sheetName.toLowerCase() === 'sheet1') continue;
@@ -55,48 +60,93 @@ export async function POST(request: Request) {
             const dueDateKey = Object.keys(data[0] || {}).find(k => k.toLowerCase().replace(/[\s\n_]+/g, '').includes('duedate')) || '';
 
             for (const row of data) {
-                const glNo = String(row['GL NO'] || '').trim();
-                const loanNo = String(row['LOAN NO'] || '').trim();
+                const rawGlNo = String(row['GL NO'] || '');
+                const rawLoanNo = String(row['LOAN NO'] || '');
 
-                if (!glNo || !loanNo || glNo === 'GL NO' || loanNo.toUpperCase() === 'TOTAL DEMAND') continue;
+                const glNo = rawGlNo.trim();
+                const loanNo = rawLoanNo.replace(/[\s\-]+/g, '').toUpperCase(); // Critical: removes spaces and hyphens for search matching
+
+                if (!glNo || !loanNo || glNo === 'GL NO' || loanNo === 'TOTALDEMAND') continue;
 
                 const glKey = normalizeLoanKey(glNo);
                 const slKey = normalizeLoanKey(loanNo);
                 const key = `${glKey}|${slKey}`;
 
+                const dueDate = dueDateKey ? String(row[dueDateKey] || '').trim() : '';
+                const grandTotal = parseCurrency(row['Grand Total\n'] || row['Grand Total'] || 0);
+                const phone = String(row['PHONE NUMBER'] || '').trim();
+                const memberName = String(row['NAME OF THE MEMBER'] || row['BORROWER NAME'] || row['MEMBER NAME'] || row['NAME'] || '').trim();
+
                 const loanDoc = loanMap.get(key);
                 if (loanDoc) {
-                    const dueDate = dueDateKey ? String(row[dueDateKey] || '').trim() : '';
-                    const grandTotal = parseCurrency(row['Grand Total\n'] || row['Grand Total'] || 0);
-
                     if (!loanDoc.annualDemands) loanDoc.annualDemands = {};
                     loanDoc.annualDemands[year] = { dueDate, grandTotal };
 
-                    if (row['PHONE NUMBER']) {
-                        loanDoc.contactNumber = String(row['PHONE NUMBER']).trim();
+                    if (phone) {
+                        loanDoc.contactNumber = phone;
                     }
 
                     matched++;
                 } else {
                     notFound++;
+                    // Deduplicate unmatched records by glNo, loanNo and year
+                    const closedKey = `${glNo}|${loanNo}|${year}`;
+                    if (!closedLoansMap.has(closedKey)) {
+                        closedLoansMap.set(closedKey, {
+                            glNo,
+                            loanNo,
+                            memberName,
+                            demandYear: year,
+                            dueDate,
+                            grandTotal,
+                            contactNumber: phone,
+                            rawData: row
+                        });
+                    }
                 }
             }
         }
 
-        let updated = 0;
+        let updatedCount = 0;
+        const bulkOps = [];
+
         for (const loanDoc of loanMap.values()) {
             if (loanDoc.isModified('annualDemands') || loanDoc.isModified('contactNumber')) {
-                loanDoc.markModified('annualDemands');
-                await loanDoc.save();
-                updated++;
+                // Ensure manual modifications trigger
+                bulkOps.push({
+                    updateOne: {
+                        filter: { _id: loanDoc._id },
+                        update: {
+                            $set: {
+                                annualDemands: loanDoc.annualDemands,
+                                contactNumber: loanDoc.contactNumber
+                            }
+                        }
+                    }
+                });
+                updatedCount++;
             }
+        }
+
+        if (bulkOps.length > 0) {
+            // Execute in batches to prevent hitting MongoDB request limits if massive
+            const BATCH_SIZE = 500;
+            for (let i = 0; i < bulkOps.length; i += BATCH_SIZE) {
+                const batch = bulkOps.slice(i, i + BATCH_SIZE);
+                await Loan.collection.bulkWrite(batch, { ordered: false });
+            }
+        }
+
+        const closedLoansToInsert = Array.from(closedLoansMap.values());
+        if (closedLoansToInsert.length > 0) {
+            await ClosedLoan.insertMany(closedLoansToInsert, { ordered: false });
         }
 
         return NextResponse.json({
             message: 'Repayments initialized directly on Loans successfully',
             matchedDemands: matched,
             unmatchedDemands: notFound,
-            updatedLoans: updated
+            updatedLoans: updatedCount
         });
 
     } catch (error: any) {

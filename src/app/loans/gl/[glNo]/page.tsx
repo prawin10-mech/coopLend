@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import {
     ArrowLeft, Layers, IndianRupee, CreditCard, TrendingDown,
-    User, Phone, MapPin, Calendar, FileBarChart2, ChevronDown, ChevronUp
+    User, Phone, MapPin, Calendar, FileBarChart2, ChevronDown, ChevronUp, Archive
 } from "lucide-react"
 import Link from "next/link"
 
@@ -308,6 +308,51 @@ export default function GLGroupPage() {
                     })}
                 </div>
             </div>
+
+            {/* Closed / Unmatched Loans */}
+            {data.closedLoans && data.closedLoans.length > 0 && (
+                <div className="pt-4 border-t mt-8">
+                    <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
+                        <Archive className="h-5 w-5 text-muted-foreground" /> Closed / Unmatched Records ({data.closedLoans.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                        {data.closedLoans.map((closed: any, i: number) => (
+                            <Card key={closed._id} className="border border-dashed shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+                                <CardHeader className="pb-3 border-b bg-muted/5">
+                                    <CardTitle className="text-sm flex justify-between items-center text-muted-foreground">
+                                        <span>Legacy Record {i + 1}</span>
+                                        <span className="font-mono text-xs bg-background border px-2 py-0.5 rounded">{closed.loanNo}</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="pt-3 pb-4 space-y-2 text-sm">
+                                    <div className="flex justify-between items-baseline gap-2 border-b border-border/30 pb-1">
+                                        <span className="text-muted-foreground text-xs shrink-0 w-28">Member Name</span>
+                                        <span className="text-xs font-semibold text-right">{closed.memberName || "—"}</span>
+                                    </div>
+                                    <div className="flex justify-between items-baseline gap-2 border-b border-border/30 pb-1">
+                                        <span className="text-muted-foreground text-xs shrink-0 w-28">Demand Year</span>
+                                        <span className="text-xs font-mono text-right">{closed.demandYear}</span>
+                                    </div>
+                                    <div className="flex justify-between items-baseline gap-2 border-b border-border/30 pb-1">
+                                        <span className="text-muted-foreground text-xs shrink-0 w-28">Due Date</span>
+                                        <span className="text-xs font-mono text-right">{closed.dueDate || "—"}</span>
+                                    </div>
+                                    <div className="flex justify-between items-baseline gap-2 pb-1 text-primary pt-1">
+                                        <span className="font-semibold text-xs shrink-0 w-28">Demand Total</span>
+                                        <span className="font-bold text-right">{fmt(closed.grandTotal || 0)}</span>
+                                    </div>
+                                    {closed.contactNumber && (
+                                        <div className="flex justify-between items-center gap-2 mt-2 pt-2 border-t border-border/30">
+                                            <span className="text-muted-foreground text-xs shrink-0 flex items-center gap-1"><Phone className="h-3 w-3" /> Contact</span>
+                                            <span className="text-xs text-right">{closed.contactNumber}</span>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

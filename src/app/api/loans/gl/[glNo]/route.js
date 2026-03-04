@@ -1,5 +1,6 @@
 import connectToDatabase from '@/lib/mongodb';
 import Loan from '@/models/Loan';
+import ClosedLoan from '@/models/ClosedLoan';
 import { NextResponse } from 'next/server';
 
 export async function GET(request, { params }) {
@@ -9,6 +10,7 @@ export async function GET(request, { params }) {
         const decodedGlNo = decodeURIComponent(glNo);
 
         const loans = await Loan.find({ glNo: decodedGlNo }).lean();
+        const closedLoans = await ClosedLoan.find({ glNo: decodedGlNo }).lean();
 
         if (!loans || loans.length === 0) {
             return NextResponse.json({ error: 'No loans found for this GL number' }, { status: 404 });
@@ -23,6 +25,7 @@ export async function GET(request, { params }) {
         return NextResponse.json({
             glNo: decodedGlNo,
             loans,
+            closedLoans,
             summary: {
                 totalLoans: loans.length,
                 totalPrincipal,
